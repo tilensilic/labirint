@@ -144,5 +144,45 @@ button:active {
     transform-origin: top center;
   }
 }
+/*responsive*/
+#uiWrap{
+  position: absolute;              
+  left: 78%;                        
+  top: 50%;
+  transform: translate(-50%, -55%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: min(92vw, 560px);
+}
+#canvas{
+  width: min(92vw, 520px);
+  height: auto;                   
+  display: block;
+}
+#controls{
+  width: min(92vw, 520px);
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+#controls button{
+  width: min(240px, 44vw);
+}
+@media (max-width: 700px){
+  #uiWrap{
+    left: 50%;
+    top: 55%;
+    transform: translate(-50%, -50%);
+  }
+
+  #controls button{
+    width: 46vw;
+    min-width: 150px;
+  }
+}
 }
 
