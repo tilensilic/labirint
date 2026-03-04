@@ -1,0 +1,148 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/*OZADJE */
+body {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  background: url("../slike/novbg.jpg") no-repeat center center;
+  background-size: cover;
+  font-family: system-ui,-apple-system,"Segoe UI", Roboto, Arial, sans-serif;
+  padding: 24px;
+}
+
+
+/* Temen overlay čez ozadje*/
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 20% 30%, rgba(0,0,0,0.25), rgba(0,0,0,0.70));
+  pointer-events: none;
+  z-index: 0;
+}
+#uiWrap{
+  position: absolute;
+  z-index: 5;
+  /* Postavi labirint + gumbe NAD napisom "DEXTER" in jih poravnaj na sredino napisa */
+  left: 78%;
+  top:clamp(40px, 9vh, 120px);
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+#container {
+  position: relative;
+  z-index: 5;
+  width: 484px;
+  height: 484px;
+  background: transparent;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+svg, canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+svg { 
+	z-index: 1; 
+}
+canvas {
+	z-index: 2; 
+}
+svg g {
+  stroke: rgba(255,255,255,0.92);
+  stroke-width: 2;
+}
+#doakes {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  pointer-events: none;
+  z-index: 6;
+  display: none;
+}
+#doakes.play-mode {
+  width: 22px;
+  height: 22px;
+  z-index: 1;
+  opacity: 0.85;
+  filter: drop-shadow(0 0 3px rgba(0,0,0,0.9));
+}
+#dexter {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  pointer-events: none;
+  z-index: 7;
+}
+#controls{
+  width: 484px;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+#controls button{
+  padding: 12px 18px;
+  min-width: 210px;
+  padding: 12px 0;
+
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 12px;
+
+  background: rgba(170, 0, 0, 0.90);
+  color: #fff;
+
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+
+  cursor: pointer;
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: transform .12s ease, filter .12s ease, background .12s ease;
+}
+#controls button:hover{
+  transform: translateY(-1px);
+  filter: brightness(1.07);
+}
+#controls button:active{
+  transform: translateY(0px) scale(0.99);
+}
+button:hover {
+  background: rgba(255, 0, 0, 0.95);
+  transform: translateY(-2px);
+}
+button:active {
+  transform: translateY(0px);
+}
+@media (max-width: 560px){
+  #uiWrap{
+    left: 50%;
+    top: 24px;
+    transform: translateX(-50%) scale(0.9);
+    transform-origin: top center;
+  }
+}
+@media (max-width: 480px){
+  #uiWrap{
+    left: 50%;
+    top: 16px;
+    transform: translateX(-50%) scale(0.8);
+    transform-origin: top center;
+  }
+}
+}
+
