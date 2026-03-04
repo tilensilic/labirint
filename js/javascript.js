@@ -1,6 +1,6 @@
 const GRID_SIZE = 30;         
-const CELL = 16;              
-const MARGIN = 2;             
+let CELL = 16;              
+let MARGIN = 2;             
 const STEP_MS = 35;           // hitrost animacije
 
 const canvas = document.getElementById("canvas");
@@ -21,6 +21,29 @@ let playMode = false;
 let playerCell = null;
 let playerTrail = [];
 
+function applyResponsiveSizing() {
+  const maxPx = 560;
+  const padding = 24;
+
+  const parent = canvas.parentElement;
+  const available = Math.min(
+    maxPx,
+    (parent?.clientWidth || window.innerWidth) - padding
+  );
+
+  CELL = Math.max(10, Math.floor(available / GRID_SIZE));
+  MARGIN = Math.max(2, Math.floor(CELL / 10));
+
+  const logicalSize = GRID_SIZE * CELL + MARGIN * 2;
+
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = Math.round(logicalSize * dpr);
+  canvas.height = Math.round(logicalSize * dpr);
+  canvas.style.width = logicalSize + "px";
+  canvas.style.height = logicalSize + "px";
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
 
 function cellIndex(x, y) {
   if (x < 0 || y < 0 || x >= GRID_SIZE || y >= GRID_SIZE) return -1;
@@ -174,7 +197,6 @@ function drawPathUntil(n) {
   ctx.stroke();
 }
 
-
 function drawFullPath(cells, color = "rgba(255,0,0,0.92)") {
   if (!cells || cells.length < 2) return;
 
@@ -195,7 +217,6 @@ function drawFullPath(cells, color = "rgba(255,0,0,0.92)") {
   ctx.stroke();
 }
 
-
 function drawPlayerToken(cell){
   if(!cell) return;
   const [cx, cy] = cellCenter(cell);
@@ -211,8 +232,6 @@ function drawPlayerToken(cell){
   ctx.arc(cx, cy, 4.5, 0, Math.PI*2);
   ctx.stroke();
 }
-
-
 
 //vedno najde najkrajšo pot
 function solveMazeBFS() {
@@ -327,7 +346,6 @@ style.innerHTML = `
 `;
 document.head.appendChild(style);
 
-
 function startPlay() {
   if (animating) return;
 
@@ -424,6 +442,8 @@ function resetAndBuild() {
   playMode = false;
   playBtn.innerText = "Igraj";
 
+  applyResponsiveSizing();
+
   // pripravi nov labirint
   generateMaze();
   pathCells = solveMazeBFS();
@@ -436,6 +456,30 @@ function resetAndBuild() {
   place(dexter, gx, gy);
   drawMaze();
 }
+
+let resizeTimer = null;
+window.addEventListener("resize", () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    applyResponsiveSizing();
+    drawMaze();
+    if (playMode) {
+      drawFullPath(playerTrail, "rgba(255,0,0,0.85)");
+      drawPlayerToken(playerCell);
+    } else if (animating) {
+      drawPathUntil(stepIndex + 1);
+      const cell = pathCells[Math.min(stepIndex, pathCells.length - 1)];
+      const [cx, cy] = cellCenter(cell);
+      place(doakes, cx, cy);
+    } else {
+      if (pathCells.length) {
+        const goal = pathCells[pathCells.length - 1];
+        const [gx, gy] = cellCenter(goal);
+        place(dexter, gx, gy);
+      }
+    }
+  }, 120);
+});
 
 // Start
 resetAndBuild();
