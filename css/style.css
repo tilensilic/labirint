@@ -146,10 +146,10 @@ button:active {
 }
 /*responsive*/
 #uiWrap{
-  position: absolute;              
-  left: 78%;                        
-  top: 50%;
-  transform: translate(-50%, -55%);
+  position: absolute;
+  left: 78%;
+  top: 38%;
+  transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   align-items: center;
