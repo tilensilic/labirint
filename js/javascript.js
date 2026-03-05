@@ -1,7 +1,7 @@
 const GRID_SIZE = 30;         
 let CELL = 16;              
 let MARGIN = 2;             
-const STEP_MS = 35;           // hitrost animacije
+const STEP_MS = 25;           // hitrost animacije
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
