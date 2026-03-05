@@ -387,7 +387,6 @@ function tryMove(dx, dy, wallKey) {
 
     
   drawMaze();
-  drawFullPath(playerTrail, "rgba(255,0,0,0.85)");
   drawPlayerToken(playerCell);
 
   // cilj
