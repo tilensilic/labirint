@@ -179,7 +179,7 @@ function drawPathUntil(n) {
   const count = Math.min(n, pathCells.length);
 
   // barva poti
-  ctx.strokeStyle = "rgba(255,0,0,0.92)";
+  ctx.strokeStyle = blue;
   ctx.lineWidth = 4;
   ctx.lineJoin = "round";
   ctx.lineCap = "round";
