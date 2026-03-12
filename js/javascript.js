@@ -6,8 +6,8 @@ const STEP_MS = 50;           // hitrost animacije
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-const doakes = document.getElementById("doakes");
-const dexter = document.getElementById("dexter");
+const astronavt = document.getElementById("astronavt");
+const raketa = document.getElementById("raketa");
 const showBtn = document.getElementById("showSolution");
 const playBtn = document.getElementById("playBtn");
 
@@ -355,7 +355,7 @@ function startPlay() {
   playerCell = maze[cellIndex(0, 0)];
   playerTrail = [playerCell];
 
-  doakes.style.display = "none";
+  astronavt.style.display = "none";
 
   
   drawMaze();
@@ -365,7 +365,7 @@ function startPlay() {
 function stopPlay() {
   playMode = false;
   playBtn.innerText = "Igraj";
-  doakes.style.display = "none";
+  astronavt.style.display = "none";
   drawMaze();
 }
 
@@ -420,9 +420,9 @@ function drawStep() {
   const cell = pathCells[Math.min(stepIndex, pathCells.length - 1)];
   const [cx, cy] = cellCenter(cell);
 
-  doakes.classList.remove("play-mode");
-  doakes.style.display = "block";
-  place(doakes, cx, cy);
+  astronavt.classList.remove("play-mode");
+  astronavt.style.display = "block";
+  place(astronavt, cx, cy);
 
   stepIndex++;
 
@@ -447,11 +447,11 @@ function resetAndBuild() {
   pathCells = solveMazeBFS();
   stepIndex = 0;
   animating = false;
-  doakes.style.display = "none";
+  astronavt.style.display = "none";
   // Dexter je na cilju
   const goal = pathCells[pathCells.length - 1];
   const [gx, gy] = cellCenter(goal);
-  place(dexter, gx, gy);
+  place(raketa, gx, gy);
   drawMaze();
 }
 
@@ -468,12 +468,12 @@ window.addEventListener("resize", () => {
       drawPathUntil(stepIndex + 1);
       const cell = pathCells[Math.min(stepIndex, pathCells.length - 1)];
       const [cx, cy] = cellCenter(cell);
-      place(doakes, cx, cy);
+      place(astronavt, cx, cy);
     } else {
       if (pathCells.length) {
         const goal = pathCells[pathCells.length - 1];
         const [gx, gy] = cellCenter(goal);
-        place(dexter, gx, gy);
+        place(raketa, gx, gy);
       }
     }
   }, 120);
