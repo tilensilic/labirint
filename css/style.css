@@ -57,7 +57,7 @@ body::before {
   flex-wrap: wrap;
 }
 
-/* KLJUČNO: canvas naj ne bo absolute (da se ne “izgubi”) */
+
 #canvas{
   position: relative;
   display: block;
