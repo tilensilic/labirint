@@ -15,7 +15,6 @@ body {
   padding: 24px;
 }
 
-
 /* Temen overlay čez ozadje*/
 body::before {
   content: "";
@@ -25,18 +24,20 @@ body::before {
   pointer-events: none;
   z-index: 0;
 }
+
 #uiWrap{
   position: absolute;
   z-index: 5;
-  /* Postavi labirint + gumbe NAD napisom "DEXTER" in jih poravnaj na sredino napisa */
   left: 78%;
-  top:clamp(40px, 9vh, 120px);
+  top: clamp(40px, 9vh, 120px);
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 16px;
+  width: min(92vw, 560px);
 }
+
 #container {
   position: relative;
   z-index: 5;
@@ -48,43 +49,73 @@ body::before {
   border-radius: 0;
   box-shadow: none;
 }
+
 svg, canvas {
   position: absolute;
   top: 0;
   left: 0;
 }
+
 svg { 
-	z-index: 1; 
+  z-index: 1; 
 }
+
 canvas {
-	z-index: 2; 
+  z-index: 2; 
 }
+
 svg g {
   stroke: rgba(255,255,255,0.92);
   stroke-width: 2;
 }
-#doakes {
+
+#canvas{
+  width: min(92vw, 520px);
+  height: auto;
+  display: block;
+}
+
+#astronavt{
   position: absolute;
-  width: 32px;
-  height: 32px;
   pointer-events: none;
+  user-select: none;
   z-index: 6;
   display: none;
+
+  font-size: 30px;
+  line-height: 1;
+  color: #ffffff;
+  text-shadow:
+    0 0 10px rgba(0,0,0,0.75),
+    0 0 14px rgba(0,180,255,0.45);
+  filter: drop-shadow(0 2px 2px rgba(0,0,0,0.6));
 }
-#doakes.play-mode {
-  width: 22px;
-  height: 22px;
-  z-index: 1;
-  opacity: 0.85;
-  filter: drop-shadow(0 0 3px rgba(0,0,0,0.9));
+
+#astronavt.play-mode{
+  display: inline-block;
+  font-size: 22px;
+  z-index: 6;
+  opacity: 0.95;
+  text-shadow:
+    0 0 10px rgba(0,0,0,0.8),
+    0 0 12px rgba(0,180,255,0.45);
 }
-#dexter {
+
+#raketa{
   position: absolute;
-  width: 32px;
-  height: 32px;
   pointer-events: none;
+  user-select: none;
   z-index: 7;
+
+  font-size: 30px;
+  line-height: 1;
+  color: #ff3b3b;
+  text-shadow:
+    0 0 10px rgba(0,0,0,0.75),
+    0 0 14px rgba(255,0,0,0.35);
+  filter: drop-shadow(0 2px 2px rgba(0,0,0,0.6));
 }
+
 #controls{
   width: 484px;
   display: flex;
@@ -92,6 +123,7 @@ svg g {
   justify-content: center;
   flex-wrap: wrap;
 }
+
 #controls button{
   padding: 12px 18px;
   min-width: 210px;
@@ -114,64 +146,25 @@ svg g {
   -webkit-backdrop-filter: blur(8px);
   transition: transform .12s ease, filter .12s ease, background .12s ease;
 }
+
 #controls button:hover{
   transform: translateY(-1px);
   filter: brightness(1.07);
 }
+
 #controls button:active{
   transform: translateY(0px) scale(0.99);
 }
+
 button:hover {
   background: rgba(255, 0, 0, 0.95);
   transform: translateY(-2px);
 }
+
 button:active {
   transform: translateY(0px);
 }
-@media (max-width: 560px){
-  #uiWrap{
-    left: 50%;
-    top: 24px;
-    transform: translateX(-50%) scale(0.9);
-    transform-origin: top center;
-  }
-}
-@media (max-width: 480px){
-  #uiWrap{
-    left: 50%;
-    top: 16px;
-    transform: translateX(-50%) scale(0.8);
-    transform-origin: top center;
-  }
-}
-/*responsive*/
-#uiWrap{
-  position: absolute;
-  left: 78%;
-  top: 38%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-  width: min(92vw, 560px);
-}
-#canvas{
-  width: min(92vw, 520px);
-  height: auto;                   
-  display: block;
-}
-#controls{
-  width: min(92vw, 520px);
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
 
-#controls button{
-  width: min(240px, 44vw);
-}
 @media (max-width: 700px){
   #uiWrap{
     left: 50%;
@@ -179,10 +172,38 @@ button:active {
     transform: translate(-50%, -50%);
   }
 
+  #controls{
+    width: min(92vw, 520px);
+  }
+
   #controls button{
     width: 46vw;
     min-width: 150px;
   }
 }
+
+@media (max-width: 560px){
+  #uiWrap{
+    left: 50%;
+    top: 24px;
+    transform: translateX(-50%) scale(0.9);
+    transform-origin: top center;
+  }
+
+  #controls{
+    width: min(92vw, 520px);
+  }
 }
 
+@media (max-width: 480px){
+  #uiWrap{
+    left: 50%;
+    top: 16px;
+    transform: translateX(-50%) scale(0.8);
+    transform-origin: top center;
+  }
+
+  #controls{
+    width: min(92vw, 520px);
+  }
+}
