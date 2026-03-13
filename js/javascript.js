@@ -58,8 +58,8 @@ function cellCenter(cell) {
 }
 
 function place(el, x, y) {
-  const w = el.offsetWidth || 32;
-  const h = el.offsetHeight || 32;
+  const w = el.offsetWidth || 28;
+  const h = el.offsetHeight || 28;
   el.style.left = (x - w / 2) + "px";
   el.style.top  = (y - h / 2) + "px";
 }
@@ -265,8 +265,6 @@ function solveMazeBFS() {
 }
 
 function showVictory() {
-
-  
   const overlay = document.createElement("div");
   overlay.style.position = "fixed";
   overlay.style.top = "0";
@@ -279,49 +277,20 @@ function showVictory() {
   overlay.style.justifyContent = "center";
   overlay.style.alignItems = "center";
   overlay.style.zIndex = "100";
-  overlay.style.animation = "fadeIn 0.5s ease";
 
-  
-  const bigDexter = document.createElement("img");
-  bigDexter.src = "slike/dexter.jpg";
-  bigDexter.style.maxWidth = "80%";
-  bigDexter.style.maxHeight = "70%";
-  bigDexter.style.borderRadius = "20px";
-  bigDexter.style.boxShadow = "0 0 40px rgba(255,0,0,0.7)";
-  bigDexter.style.transform = "scale(0.7)";
-  bigDexter.style.transition = "transform 1s ease";
-
-  
   const message = document.createElement("div");
   message.innerText = "USPEŠNO SI REŠIL LABIRINT!";
-  message.style.marginTop = "30px";
   message.style.fontSize = "42px";
   message.style.fontFamily = "'Trebuchet MS', sans-serif";
   message.style.color = "white";
   message.style.letterSpacing = "2px";
   message.style.textTransform = "uppercase";
   message.style.textShadow = "0 0 15px red";
-  message.style.animation = "fadeInText 1s ease";
 
-  overlay.appendChild(bigDexter);
   overlay.appendChild(message);
   document.body.appendChild(overlay);
-
-  
-  setTimeout(() => {
-    bigDexter.style.transform = "scale(1)";
-  }, 50);
-
-  
   overlay.addEventListener("click", () => overlay.remove());
 }
-
-const style = document.createElement("style");
-style.innerHTML = `
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes fadeInText { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-`;
-document.head.appendChild(style);
 
 function startPlay() {
   if (animating) return;
@@ -333,9 +302,7 @@ function startPlay() {
   playerTrail = [playerCell];
 
   astronavt.classList.add("play-mode");
-  astronavt.style.display = "inline-block";
 
-  
   drawMaze();
   drawFullPath(playerTrail, "rgba(255,0,0,0.85)");
   const [cx, cy] = cellCenter(playerCell);
@@ -346,8 +313,6 @@ function stopPlay() {
   playMode = false;
   playBtn.innerText = "Igraj";
   astronavt.classList.remove("play-mode");
-  astronavt.style.display = "inline-block";
-  // vrni na START
   const startCell = maze[cellIndex(0, 0)];
   const [sx, sy] = cellCenter(startCell);
   place(astronavt, sx, sy);
@@ -369,7 +334,6 @@ function tryMove(dx, dy, wallKey) {
   playerCell = maze[ni];
   playerTrail.push(playerCell);
 
-    
   drawMaze();
   drawFullPath(playerTrail, "rgba(255,0,0,0.85)");
   const [cx, cy] = cellCenter(playerCell);
@@ -389,7 +353,6 @@ window.addEventListener("keydown", (e) => {
   if (!playMode) return;
 
   const k = e.key.toLowerCase();
-
   if (["arrowup","arrowdown","arrowleft","arrowright"," "].includes(k)) e.preventDefault();
 
   if (k === "w" || k === "arrowup")    return tryMove(0, -1, "top");
@@ -409,7 +372,6 @@ function drawStep() {
   const [cx, cy] = cellCenter(cell);
 
   astronavt.classList.remove("play-mode");
-  astronavt.style.display = "inline-block";
   place(astronavt, cx, cy);
 
   stepIndex++;
@@ -424,26 +386,21 @@ function drawStep() {
 }
 
 function resetAndBuild() {
-
   playMode = false;
   playBtn.innerText = "Igraj";
 
   applyResponsiveSizing();
 
-  // pripravi nov labirint
   generateMaze();
   pathCells = solveMazeBFS();
   stepIndex = 0;
   animating = false;
 
-  // astronavt na START
   const startCell = maze[cellIndex(0, 0)];
   const [sx, sy] = cellCenter(startCell);
   astronavt.classList.remove("play-mode");
-  astronavt.style.display = "inline-block";
   place(astronavt, sx, sy);
 
-  // Dexter je na cilju
   const goal = pathCells[pathCells.length - 1];
   const [gx, gy] = cellCenter(goal);
   place(raketa, gx, gy);
@@ -457,6 +414,7 @@ window.addEventListener("resize", () => {
   resizeTimer = setTimeout(() => {
     applyResponsiveSizing();
     drawMaze();
+
     if (playMode) {
       drawFullPath(playerTrail, "rgba(255,0,0,0.85)");
       const [cx, cy] = cellCenter(playerCell);
