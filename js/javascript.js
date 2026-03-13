@@ -164,13 +164,6 @@ function drawMaze() {
       ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + CELL); ctx.stroke();
     }
   }
-
-  // označi START in FINISH
-  ctx.fillStyle = "rgba(0,255,0,0.25)";
-  ctx.fillRect(MARGIN + 0 * CELL + 2, MARGIN + 0 * CELL + 2, CELL - 4, CELL - 4);
-
-  ctx.fillStyle = "rgba(255,0,0,0.20)";
-  ctx.fillRect(MARGIN + (GRID_SIZE - 1) * CELL + 2, MARGIN + (GRID_SIZE - 1) * CELL + 2, CELL - 4, CELL - 4);
 }
 
 function drawPathUntil(n) {
@@ -179,7 +172,7 @@ function drawPathUntil(n) {
   const count = Math.min(n, pathCells.length);
 
   // barva poti
-  ctx.strokeStyle = "rgba(0,255,0,0.25)";
+  ctx.strokeStyle = "rgba(255,0,0,0.92)";
   ctx.lineWidth = 4;
   ctx.lineJoin = "round";
   ctx.lineCap = "round";
@@ -214,22 +207,6 @@ function drawFullPath(cells, color = "rgba(255,0,0,0.92)") {
     ctx.lineTo(x, y);
   }
 
-  ctx.stroke();
-}
-
-function drawPlayerToken(cell){
-  if(!cell) return;
-  const [cx, cy] = cellCenter(cell);
-
-  ctx.fillStyle = "rgba(0,180,255,0.95)";
-  ctx.beginPath();
-  ctx.arc(cx, cy, 4.5, 0, Math.PI*2);
-  ctx.fill();
-
-  ctx.strokeStyle = "rgba(0,0,0,0.6)";
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  ctx.arc(cx, cy, 4.5, 0, Math.PI*2);
   ctx.stroke();
 }
 
@@ -355,17 +332,25 @@ function startPlay() {
   playerCell = maze[cellIndex(0, 0)];
   playerTrail = [playerCell];
 
-  astronavt.style.display = "none";
+  astronavt.classList.add("play-mode");
+  astronavt.style.display = "inline-block";
 
   
   drawMaze();
-  drawPlayerToken(playerCell);
+  drawFullPath(playerTrail, "rgba(255,0,0,0.85)");
+  const [cx, cy] = cellCenter(playerCell);
+  place(astronavt, cx, cy);
 }
 
 function stopPlay() {
   playMode = false;
   playBtn.innerText = "Igraj";
-  astronavt.style.display = "none";
+  astronavt.classList.remove("play-mode");
+  astronavt.style.display = "inline-block";
+  // vrni na START
+  const startCell = maze[cellIndex(0, 0)];
+  const [sx, sy] = cellCenter(startCell);
+  place(astronavt, sx, sy);
   drawMaze();
 }
 
@@ -386,12 +371,15 @@ function tryMove(dx, dy, wallKey) {
 
     
   drawMaze();
-  drawPlayerToken(playerCell);
+  drawFullPath(playerTrail, "rgba(255,0,0,0.85)");
+  const [cx, cy] = cellCenter(playerCell);
+  place(astronavt, cx, cy);
 
   // cilj
   if (playerCell.x === GRID_SIZE - 1 && playerCell.y === GRID_SIZE - 1) {
     playMode = false;
     playBtn.innerText = "Igraj";
+    astronavt.classList.remove("play-mode");
     showVictory();
   }
 }
@@ -421,7 +409,7 @@ function drawStep() {
   const [cx, cy] = cellCenter(cell);
 
   astronavt.classList.remove("play-mode");
-  astronavt.style.display = "block";
+  astronavt.style.display = "inline-block";
   place(astronavt, cx, cy);
 
   stepIndex++;
@@ -447,11 +435,19 @@ function resetAndBuild() {
   pathCells = solveMazeBFS();
   stepIndex = 0;
   animating = false;
-  astronavt.style.display = "none";
+
+  // astronavt na START
+  const startCell = maze[cellIndex(0, 0)];
+  const [sx, sy] = cellCenter(startCell);
+  astronavt.classList.remove("play-mode");
+  astronavt.style.display = "inline-block";
+  place(astronavt, sx, sy);
+
   // Dexter je na cilju
   const goal = pathCells[pathCells.length - 1];
   const [gx, gy] = cellCenter(goal);
   place(raketa, gx, gy);
+
   drawMaze();
 }
 
@@ -463,13 +459,18 @@ window.addEventListener("resize", () => {
     drawMaze();
     if (playMode) {
       drawFullPath(playerTrail, "rgba(255,0,0,0.85)");
-      drawPlayerToken(playerCell);
+      const [cx, cy] = cellCenter(playerCell);
+      place(astronavt, cx, cy);
     } else if (animating) {
       drawPathUntil(stepIndex + 1);
       const cell = pathCells[Math.min(stepIndex, pathCells.length - 1)];
       const [cx, cy] = cellCenter(cell);
       place(astronavt, cx, cy);
     } else {
+      const startCell = maze[cellIndex(0, 0)];
+      const [sx, sy] = cellCenter(startCell);
+      place(astronavt, sx, sy);
+
       if (pathCells.length) {
         const goal = pathCells[pathCells.length - 1];
         const [gx, gy] = cellCenter(goal);
