@@ -293,13 +293,24 @@ function showVictory() {
 }
 
 function updateTrail(nextCell) {
-  const idx = playerTrail.findIndex(c => c.x === nextCell.x && c.y === nextCell.y);
+  // backstep: če greš na prejšnjo celico, odstrani zadnjo točko (črta se izbriše)
+  if (playerTrail.length >= 2) {
+    const prev = playerTrail[playerTrail.length - 2];
+    if (prev.x === nextCell.x && prev.y === nextCell.y) {
+      playerTrail.pop();
+      return;
+    }
+  }
 
+  // loop: če je celica že v poti, odreži pot do tja
+  const idx = playerTrail.findIndex(c => c.x === nextCell.x && c.y === nextCell.y);
   if (idx !== -1) {
     playerTrail = playerTrail.slice(0, idx + 1);
-  } else {
-    playerTrail.push(nextCell);
+    return;
   }
+
+  // normal: nova celica
+  playerTrail.push(nextCell);
 }
 
 function startPlay() {
