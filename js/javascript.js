@@ -47,8 +47,10 @@ function setTimerDisplay() {
 }
 
 function stopTimer() {
-  if (timerId) clearInterval(timerId);
-  timerId = null;
+  if (timerId) {
+    clearInterval(timerId);
+    timerId = null;
+  }
 }
 
 function resetTimerToDifficulty() {
@@ -96,13 +98,15 @@ function startTimer() {
 
   timerId = setInterval(() => {
     timeLeftMs = timerEndAt - Date.now();
-    setTimerDisplay();
 
     if (timeLeftMs <= 0) {
       timeLeftMs = 0;
       setTimerDisplay();
       timeUp();
+      return;
     }
+
+    setTimerDisplay();
   }, 100);
 }
 
@@ -224,16 +228,12 @@ function generateMaze() {
 
   maze[0].walls.top = false;
   maze[maze.length - 1].walls.bottom = false;
-
-  // reset visited za solver
   maze.forEach(c => c.visited = false);
 }
 
-// Risanje
 function drawMaze() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // stene
   ctx.strokeStyle = "rgba(255,255,255,0.92)";
   ctx.lineWidth = 2;
   ctx.lineCap = "square";
@@ -243,16 +243,28 @@ function drawMaze() {
     const y = MARGIN + cell.y * CELL;
 
     if (cell.walls.top) {
-      ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + CELL, y); ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x + CELL, y);
+      ctx.stroke();
     }
     if (cell.walls.right) {
-      ctx.beginPath(); ctx.moveTo(x + CELL, y); ctx.lineTo(x + CELL, y + CELL); ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(x + CELL, y);
+      ctx.lineTo(x + CELL, y + CELL);
+      ctx.stroke();
     }
     if (cell.walls.bottom) {
-      ctx.beginPath(); ctx.moveTo(x, y + CELL); ctx.lineTo(x + CELL, y + CELL); ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(x, y + CELL);
+      ctx.lineTo(x + CELL, y + CELL);
+      ctx.stroke();
     }
     if (cell.walls.left) {
-      ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + CELL); ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x, y + CELL);
+      ctx.stroke();
     }
   }
 }
@@ -262,7 +274,6 @@ function drawPathUntil(n) {
 
   const count = Math.min(n, pathCells.length);
 
-  // barva poti
   ctx.strokeStyle = "rgba(255,0,0,0.92)";
   ctx.lineWidth = 4;
   ctx.lineJoin = "round";
@@ -301,7 +312,6 @@ function drawFullPath(cells, color = "rgba(255,0,0,0.92)") {
   ctx.stroke();
 }
 
-//vedno najde najkrajšo pot
 function solveMazeBFS() {
   const start = maze[0];
   const goal = maze[maze.length - 1];
@@ -326,7 +336,8 @@ function solveMazeBFS() {
     for (const m of moves) {
       if (cur.walls[m.wall]) continue;
 
-      const nx = x + m.dx, ny = y + m.dy;
+      const nx = x + m.dx;
+      const ny = y + m.dy;
       const ni = cellIndex(nx, ny);
       if (ni === -1) continue;
 
@@ -412,7 +423,6 @@ function startPlay() {
   playerTrail = [playerCell];
 
   astronavt.classList.add("play-mode");
-
   startTimer();
 
   drawMaze();
@@ -466,15 +476,16 @@ window.addEventListener("keydown", (e) => {
   if (!playMode) return;
 
   const k = e.key.toLowerCase();
-  if (["arrowup","arrowdown","arrowleft","arrowright"," "].includes(k)) e.preventDefault();
+  if (["arrowup", "arrowdown", "arrowleft", "arrowright", " "].includes(k)) {
+    e.preventDefault();
+  }
 
-  if (k === "w" || k === "arrowup")    return tryMove(0, -1, "top");
-  if (k === "d" || k === "arrowright") return tryMove(1,  0, "right");
-  if (k === "s" || k === "arrowdown")  return tryMove(0,  1, "bottom");
-  if (k === "a" || k === "arrowleft")  return tryMove(-1, 0, "left");
+  if (k === "w" || k === "arrowup") return tryMove(0, -1, "top");
+  if (k === "d" || k === "arrowright") return tryMove(1, 0, "right");
+  if (k === "s" || k === "arrowdown") return tryMove(0, 1, "bottom");
+  if (k === "a" || k === "arrowleft") return tryMove(-1, 0, "left");
 });
 
-// Animacija rešitve
 function drawStep() {
   if (!animating) return;
 
@@ -568,7 +579,6 @@ showBtn.addEventListener("click", () => {
   if (animating) return;
 
   stopTimer();
-
   stepIndex = 0;
   animating = true;
   drawStep();
