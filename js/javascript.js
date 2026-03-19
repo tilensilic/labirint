@@ -292,6 +292,16 @@ function showVictory() {
   overlay.addEventListener("click", () => overlay.remove());
 }
 
+function updateTrail(nextCell) {
+  const idx = playerTrail.findIndex(c => c.x === nextCell.x && c.y === nextCell.y);
+
+  if (idx !== -1) {
+    playerTrail = playerTrail.slice(0, idx + 1);
+  } else {
+    playerTrail.push(nextCell);
+  }
+}
+
 function startPlay() {
   if (animating) return;
 
@@ -332,7 +342,7 @@ function tryMove(dx, dy, wallKey) {
   if (ni < 0) return;
 
   playerCell = maze[ni];
-  playerTrail.push(playerCell);
+  updateTrail(playerCell);
 
   drawMaze();
   drawFullPath(playerTrail, "rgba(255,0,0,0.85)");
