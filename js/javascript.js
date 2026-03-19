@@ -1,6 +1,6 @@
-const GRID_SIZE = 30;         
-let CELL = 16;              
-let MARGIN = 2;             
+const GRID_SIZE = 30;
+let CELL = 16;
+let MARGIN = 2;
 const STEP_MS = 50;           // hitrost animacije
 
 const canvas = document.getElementById("canvas");
@@ -16,6 +16,7 @@ const timerEl = document.getElementById("timer");
 
 let timeLeftMs = 180000;
 let timerId = null;
+let timerEndAt = 0;
 
 let maze = [];
 let pathCells = [];
@@ -38,7 +39,7 @@ function formatTime(ms) {
   const total = Math.max(0, Math.ceil(ms / 1000));
   const m = Math.floor(total / 60);
   const s = total % 60;
-  return String(m).padStart(2,"0") + ":" + String(s).padStart(2,"0");
+  return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
 }
 
 function setTimerDisplay() {
@@ -48,6 +49,11 @@ function setTimerDisplay() {
 function stopTimer() {
   if (timerId) clearInterval(timerId);
   timerId = null;
+}
+
+function resetTimerToDifficulty() {
+  timeLeftMs = difficultyToMs();
+  setTimerDisplay();
 }
 
 function timeUp() {
@@ -67,40 +73,42 @@ function timeUp() {
   overlay.style.justifyContent = "center";
   overlay.style.alignItems = "center";
   overlay.style.zIndex = "200";
-  overlay.style.color = "white";
-  overlay.style.fontSize = "38px";
-  overlay.style.fontFamily = "'Trebuchet MS', sans-serif";
-  overlay.style.textTransform = "uppercase";
-  overlay.style.textShadow = "0 0 15px red";
-  overlay.innerText = "ČAS JE POTEKEL!";
+
+  const message = document.createElement("div");
+  message.innerText = "ČAS JE POTEKEL!";
+  message.style.color = "white";
+  message.style.fontSize = "38px";
+  message.style.fontFamily = "'Trebuchet MS', sans-serif";
+  message.style.textTransform = "uppercase";
+  message.style.textShadow = "0 0 15px red";
+
+  overlay.appendChild(message);
   document.body.appendChild(overlay);
   overlay.addEventListener("click", () => overlay.remove());
 }
 
 function startTimer() {
   stopTimer();
+
   timeLeftMs = difficultyToMs();
+  timerEndAt = Date.now() + timeLeftMs;
   setTimerDisplay();
 
-  let prev = Date.now();
   timerId = setInterval(() => {
-    const now = Date.now();
-    const dt = now - prev;
-    prev = now;
-
-    timeLeftMs -= dt;
+    timeLeftMs = timerEndAt - Date.now();
     setTimerDisplay();
 
     if (timeLeftMs <= 0) {
+      timeLeftMs = 0;
+      setTimerDisplay();
       timeUp();
     }
-  }, 200);
+  }, 100);
 }
 
 difficultySelect.addEventListener("change", () => {
   if (!playMode && !animating) {
-    timeLeftMs = difficultyToMs();
-    setTimerDisplay();
+    resetTimerToDifficulty();
   }
 });
 
@@ -300,7 +308,7 @@ function solveMazeBFS() {
 
   const q = [start];
   const visited = new Set([cellIndex(start.x, start.y)]);
-  const parent = new Map(); // key -> prevKey
+  const parent = new Map();
 
   while (q.length) {
     const cur = q.shift();
@@ -419,8 +427,7 @@ function stopPlay() {
   astronavt.classList.remove("play-mode");
 
   stopTimer();
-  timeLeftMs = difficultyToMs();
-  setTimerDisplay();
+  resetTimerToDifficulty();
 
   const startCell = maze[cellIndex(0, 0)];
   const [sx, sy] = cellCenter(startCell);
@@ -496,8 +503,7 @@ function resetAndBuild() {
   playBtn.innerText = "Igraj";
 
   stopTimer();
-  timeLeftMs = difficultyToMs();
-  setTimerDisplay();
+  resetTimerToDifficulty();
 
   applyResponsiveSizing();
 
