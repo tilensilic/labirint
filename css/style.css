@@ -94,6 +94,44 @@ body::before {
   gap: 12px;
   justify-content: center;
   flex-wrap: wrap;
+  align-items: center;
+}
+
+#difficulty{
+  width: min(240px, 44vw);
+  min-width: 210px;
+  padding: 12px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(0,0,0,0.35);
+  color: white;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  outline: none;
+}
+
+#difficulty option{
+  background: #111;
+  color: white;
+}
+
+#timer{
+  width: min(160px, 30vw);
+  min-width: 130px;
+  text-align: center;
+  padding: 10px 0;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(0,0,0,0.35);
+  color: white;
+  font-weight: 800;
+  letter-spacing: 1px;
+  font-size: 16px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 #controls button{
@@ -131,6 +169,11 @@ body::before {
 
 @media (max-width: 700px){
   #controls button{
+    width: 46vw;
+    min-width: 150px;
+  }
+
+  #difficulty{
     width: 46vw;
     min-width: 150px;
   }
