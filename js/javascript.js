@@ -11,6 +11,12 @@ const raketa = document.getElementById("raketa");
 const showBtn = document.getElementById("showSolution");
 const playBtn = document.getElementById("playBtn");
 
+const difficultySelect = document.getElementById("difficulty");
+const timerEl = document.getElementById("timer");
+
+let timeLeftMs = 180000;
+let timerId = null;
+
 let maze = [];
 let pathCells = [];
 let animating = false;
@@ -20,6 +26,83 @@ let stepIndex = 0;
 let playMode = false;
 let playerCell = null;
 let playerTrail = [];
+
+function difficultyToMs() {
+  const d = Number(difficultySelect.value);
+  if (d === 1) return 3 * 60 * 1000;
+  if (d === 2) return 2 * 60 * 1000;
+  return 1 * 60 * 1000;
+}
+
+function formatTime(ms) {
+  const total = Math.max(0, Math.ceil(ms / 1000));
+  const m = Math.floor(total / 60);
+  const s = total % 60;
+  return String(m).padStart(2,"0") + ":" + String(s).padStart(2,"0");
+}
+
+function setTimerDisplay() {
+  timerEl.textContent = formatTime(timeLeftMs);
+}
+
+function stopTimer() {
+  if (timerId) clearInterval(timerId);
+  timerId = null;
+}
+
+function timeUp() {
+  stopTimer();
+  playMode = false;
+  playBtn.innerText = "Igraj";
+  astronavt.classList.remove("play-mode");
+
+  const overlay = document.createElement("div");
+  overlay.style.position = "fixed";
+  overlay.style.top = "0";
+  overlay.style.left = "0";
+  overlay.style.width = "100vw";
+  overlay.style.height = "100vh";
+  overlay.style.background = "rgba(0,0,0,0.85)";
+  overlay.style.display = "flex";
+  overlay.style.justifyContent = "center";
+  overlay.style.alignItems = "center";
+  overlay.style.zIndex = "200";
+  overlay.style.color = "white";
+  overlay.style.fontSize = "38px";
+  overlay.style.fontFamily = "'Trebuchet MS', sans-serif";
+  overlay.style.textTransform = "uppercase";
+  overlay.style.textShadow = "0 0 15px red";
+  overlay.innerText = "ČAS JE POTEKEL!";
+  document.body.appendChild(overlay);
+  overlay.addEventListener("click", () => overlay.remove());
+}
+
+function startTimer() {
+  stopTimer();
+  timeLeftMs = difficultyToMs();
+  setTimerDisplay();
+
+  let prev = Date.now();
+  timerId = setInterval(() => {
+    const now = Date.now();
+    const dt = now - prev;
+    prev = now;
+
+    timeLeftMs -= dt;
+    setTimerDisplay();
+
+    if (timeLeftMs <= 0) {
+      timeUp();
+    }
+  }, 200);
+}
+
+difficultySelect.addEventListener("change", () => {
+  if (!playMode && !animating) {
+    timeLeftMs = difficultyToMs();
+    setTimerDisplay();
+  }
+});
 
 function applyResponsiveSizing() {
   const maxPx = 560;
@@ -233,7 +316,7 @@ function solveMazeBFS() {
     ];
 
     for (const m of moves) {
-      if (cur.walls[m.wall]) continue; // stena => ne moremo
+      if (cur.walls[m.wall]) continue;
 
       const nx = x + m.dx, ny = y + m.dy;
       const ni = cellIndex(nx, ny);
@@ -265,6 +348,8 @@ function solveMazeBFS() {
 }
 
 function showVictory() {
+  stopTimer();
+
   const overlay = document.createElement("div");
   overlay.style.position = "fixed";
   overlay.style.top = "0";
@@ -276,7 +361,7 @@ function showVictory() {
   overlay.style.flexDirection = "column";
   overlay.style.justifyContent = "center";
   overlay.style.alignItems = "center";
-  overlay.style.zIndex = "100";
+  overlay.style.zIndex = "200";
 
   const message = document.createElement("div");
   message.innerText = "USPEŠNO SI REŠIL LABIRINT!";
@@ -293,7 +378,6 @@ function showVictory() {
 }
 
 function updateTrail(nextCell) {
-  // backstep: če greš na prejšnjo celico, odstrani zadnjo točko (črta se izbriše)
   if (playerTrail.length >= 2) {
     const prev = playerTrail[playerTrail.length - 2];
     if (prev.x === nextCell.x && prev.y === nextCell.y) {
@@ -302,14 +386,12 @@ function updateTrail(nextCell) {
     }
   }
 
-  // loop: če je celica že v poti, odreži pot do tja
   const idx = playerTrail.findIndex(c => c.x === nextCell.x && c.y === nextCell.y);
   if (idx !== -1) {
     playerTrail = playerTrail.slice(0, idx + 1);
     return;
   }
 
-  // normal: nova celica
   playerTrail.push(nextCell);
 }
 
@@ -318,11 +400,12 @@ function startPlay() {
 
   playMode = true;
   playBtn.innerText = "Ustavi igro";
-  // reset igralca na START
   playerCell = maze[cellIndex(0, 0)];
   playerTrail = [playerCell];
 
   astronavt.classList.add("play-mode");
+
+  startTimer();
 
   drawMaze();
   drawFullPath(playerTrail, "rgba(255,0,0,0.85)");
@@ -334,6 +417,11 @@ function stopPlay() {
   playMode = false;
   playBtn.innerText = "Igraj";
   astronavt.classList.remove("play-mode");
+
+  stopTimer();
+  timeLeftMs = difficultyToMs();
+  setTimerDisplay();
+
   const startCell = maze[cellIndex(0, 0)];
   const [sx, sy] = cellCenter(startCell);
   place(astronavt, sx, sy);
@@ -344,7 +432,6 @@ function tryMove(dx, dy, wallKey) {
   if (!playMode || animating) return;
   if (!playerCell) return;
 
-  // če je stena, ne moremo
   if (playerCell.walls[wallKey]) return;
 
   const nx = playerCell.x + dx;
@@ -360,7 +447,6 @@ function tryMove(dx, dy, wallKey) {
   const [cx, cy] = cellCenter(playerCell);
   place(astronavt, cx, cy);
 
-  // cilj
   if (playerCell.x === GRID_SIZE - 1 && playerCell.y === GRID_SIZE - 1) {
     playMode = false;
     playBtn.innerText = "Igraj";
@@ -369,7 +455,6 @@ function tryMove(dx, dy, wallKey) {
   }
 }
 
-// tipke: WASD ali puščice
 window.addEventListener("keydown", (e) => {
   if (!playMode) return;
 
@@ -409,6 +494,10 @@ function drawStep() {
 function resetAndBuild() {
   playMode = false;
   playBtn.innerText = "Igraj";
+
+  stopTimer();
+  timeLeftMs = difficultyToMs();
+  setTimerDisplay();
 
   applyResponsiveSizing();
 
@@ -462,17 +551,18 @@ window.addEventListener("resize", () => {
 // Start
 resetAndBuild();
 
-// gumb: igraj
 playBtn.addEventListener("click", () => {
   if (animating) return;
   if (!playMode) startPlay();
   else stopPlay();
 });
 
-// gumb: prikaži rešitev
 showBtn.addEventListener("click", () => {
   if (playMode) stopPlay();
   if (animating) return;
+
+  stopTimer();
+
   stepIndex = 0;
   animating = true;
   drawStep();
