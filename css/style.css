@@ -90,7 +90,7 @@ body::before {
   width: min(92vw, 520px);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
   align-items: center;
 }
 
@@ -98,25 +98,28 @@ body::before {
 .bottomRow {
   width: 100%;
   display: flex;
-  gap: 12px;
   justify-content: center;
-  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: nowrap;
 }
 
 #difficulty,
 #timer,
 #controls button {
-  border-radius: 14px;
+  border-radius: 16px;
   border: 1px solid rgba(255,255,255,0.18);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
 }
 
 #difficulty {
-  min-width: 220px;
-  width: min(250px, 44vw);
-  padding: 12px 14px;
-  background: rgba(0,0,0,0.40);
+  flex: 1 1 0;
+  max-width: 250px;
+  min-width: 0;
+  padding: 14px 16px;
+  background: rgba(10,15,30,0.55);
   color: white;
   font-weight: 700;
   font-size: 15px;
@@ -130,11 +133,11 @@ body::before {
 }
 
 #timer {
-  min-width: 130px;
-  width: min(150px, 28vw);
-  padding: 12px 0;
+  width: 150px;
+  flex: 0 0 150px;
   text-align: center;
-  background: rgba(0,0,0,0.40);
+  padding: 14px 0;
+  background: rgba(10,15,30,0.55);
   color: white;
   font-weight: 800;
   font-size: 20px;
@@ -143,9 +146,10 @@ body::before {
 }
 
 #controls button {
-  min-width: 210px;
-  width: min(240px, 44vw);
-  padding: 13px 0;
+  flex: 1 1 0;
+  max-width: 250px;
+  min-width: 0;
+  padding: 14px 0;
   background: rgba(170, 0, 0, 0.90);
   color: #fff;
   font-size: 15px;
@@ -167,15 +171,17 @@ body::before {
 }
 
 @media (max-width: 700px) {
-  #difficulty,
-  #controls button {
-    width: 46vw;
-    min-width: 150px;
+  .topRow,
+  .bottomRow {
+    flex-wrap: wrap;
   }
 
-  #timer {
-    width: 46vw;
-    min-width: 150px;
+  #difficulty,
+  #timer,
+  #controls button {
+    width: 100%;
+    max-width: 100%;
+    flex: 1 1 100%;
   }
 }
 
