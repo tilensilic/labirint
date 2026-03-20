@@ -20,7 +20,7 @@ body::before {
   content: "";
   position: fixed;
   inset: 0;
-  background: radial-gradient(circle at 20% 30%, rgba(0,0,0,0.25), rgba(0,0,0,0.70));
+  background: radial-gradient(circle at 20% 30%, rgba(0,0,0,0.22), rgba(0,0,0,0.72));
   pointer-events: none;
   z-index: 0;
 }
@@ -34,13 +34,12 @@ body::before {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 18px;
-  width: min(92vw, 620px);
+  gap: 20px;
+  width: min(94vw, 620px);
 }
 
 #container {
   position: relative;
-  z-index: 5;
   width: min(92vw, 520px);
   aspect-ratio: 1 / 1;
   background: transparent;
@@ -90,41 +89,59 @@ body::before {
   width: min(92vw, 520px);
   display: flex;
   flex-direction: column;
-  gap: 14px;
   align-items: center;
+  gap: 14px;
 }
 
 .topRow,
 .bottomRow {
   width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: grid;
   gap: 14px;
-  flex-wrap: nowrap;
 }
 
-#difficulty,
-#timer,
+.topRow {
+  grid-template-columns: 1fr 150px;
+}
+
+.bottomRow {
+  grid-template-columns: 1fr 1fr;
+}
+
+.controlBox,
 #controls button {
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,0.18);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  height: 52px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.16);
+  box-shadow:
+    0 8px 24px rgba(0,0,0,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.controlBox {
+  background: rgba(10, 18, 35, 0.52);
+}
+
+.selectBox {
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
 }
 
 #difficulty {
-  flex: 1 1 0;
-  max-width: 250px;
-  min-width: 0;
-  padding: 14px 16px;
-  background: rgba(10,15,30,0.55);
-  color: white;
-  font-weight: 700;
-  font-size: 15px;
-  letter-spacing: 0.3px;
+  width: 100%;
+  height: 100%;
+  border: none;
   outline: none;
+  background: transparent;
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  appearance: none;
+  cursor: pointer;
 }
 
 #difficulty option {
@@ -132,24 +149,33 @@ body::before {
   color: white;
 }
 
-#timer {
-  width: 150px;
-  flex: 0 0 150px;
-  text-align: center;
-  padding: 14px 0;
-  background: rgba(10,15,30,0.55);
+.selectBox {
+  position: relative;
+}
+
+.selectBox::after {
+  content: "\f078";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  color: rgba(255,255,255,0.9);
+  position: absolute;
+  right: 16px;
+  pointer-events: none;
+  font-size: 13px;
+}
+
+.timerBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: white;
+  font-size: 18px;
   font-weight: 800;
-  font-size: 20px;
   letter-spacing: 1px;
   text-shadow: 0 0 10px rgba(255,255,255,0.08);
 }
 
 #controls button {
-  flex: 1 1 0;
-  max-width: 250px;
-  min-width: 0;
-  padding: 14px 0;
   background: rgba(170, 0, 0, 0.90);
   color: #fff;
   font-size: 15px;
@@ -173,15 +199,11 @@ body::before {
 @media (max-width: 700px) {
   .topRow,
   .bottomRow {
-    flex-wrap: wrap;
+    grid-template-columns: 1fr;
   }
 
-  #difficulty,
-  #timer,
-  #controls button {
-    width: 100%;
-    max-width: 100%;
-    flex: 1 1 100%;
+  .topRow {
+    gap: 12px;
   }
 }
 
