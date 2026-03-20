@@ -35,12 +35,12 @@ body::before {
   flex-direction: column;
   align-items: center;
   gap: 20px;
-  width: min(94vw, 620px);
+  width: min(92vw, 520px);
 }
 
 #container {
   position: relative;
-  width: min(92vw, 520px);
+  width: 100%;
   aspect-ratio: 1 / 1;
   background: transparent;
 }
@@ -86,7 +86,7 @@ body::before {
 }
 
 #controls {
-  width: min(92vw, 520px);
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -128,6 +128,7 @@ body::before {
   display: flex;
   align-items: center;
   padding: 0 14px;
+  position: relative;
 }
 
 #difficulty {
@@ -147,10 +148,6 @@ body::before {
 #difficulty option {
   background: #111;
   color: white;
-}
-
-.selectBox {
-  position: relative;
 }
 
 .selectBox::after {
@@ -176,6 +173,8 @@ body::before {
 }
 
 #controls button {
+  width: 100%;
+  padding: 14px 0;
   background: rgba(170, 0, 0, 0.90);
   color: #fff;
   font-size: 15px;
@@ -200,10 +199,6 @@ body::before {
   .topRow,
   .bottomRow {
     grid-template-columns: 1fr;
-  }
-
-  .topRow {
-    gap: 12px;
   }
 }
 
