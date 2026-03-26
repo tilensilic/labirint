@@ -1,13 +1,11 @@
 const GRID_SIZE = 30;
 let CELL = 16;
 let MARGIN = 2;
-const STEP_MS = 50;
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 const astronavt = document.getElementById("astronavt");
 const raketa = document.getElementById("raketa");
-const showBtn = document.getElementById("showSolution");
 const playBtn = document.getElementById("playBtn");
 const difficultySelect = document.getElementById("difficulty");
 const timerEl = document.getElementById("timer");
@@ -23,57 +21,49 @@ closeBtn.onclick = () => modal.style.display = "none";
 closeBtnBottom.onclick = () => modal.style.display = "none";
 window.onclick = (e) => { if(e.target == modal) modal.style.display = "none"; }
 
-let timeLeftMs = 180000;
 let timerId = null;
-let timerEndAt = 0;
 let maze = [];
-let pathCells = [];
-let animating = false;
-let stepIndex = 0;
 let playMode = false;
 let playerCell = null;
 
-function difficultyToMs() {
-    const d = Number(difficultySelect.value);
-    return d === 1 ? 180000 : d === 2 ? 120000 : 60000;
-}
-
-function formatTime(ms) {
-    const total = Math.max(0, Math.ceil(ms / 1000));
-    const m = Math.floor(total / 60);
-    const s = total % 60;
-    return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
-}
-
-function stopTimer() { if (timerId) { clearInterval(timerId); timerId = null; } }
-
-function startTimer() {
-    stopTimer();
-    timeLeftMs = difficultyToMs();
-    timerEndAt = Date.now() + timeLeftMs;
-    timerId = setInterval(() => {
-        timeLeftMs = timerEndAt - Date.now();
-        if (timeLeftMs <= 0) { timeLeftMs = 0; stopTimer(); timeUp(); }
-        timerEl.textContent = formatTime(timeLeftMs);
-    }, 100);
-}
-
-function timeUp() {
-    playMode = false;
-    alert("Kritično! Zmanjkalo je kisika. Poizkusi ponovno.");
-    resetAndBuild();
-}
-
 function applyResponsiveSizing() {
-    const available = Math.min(560, window.innerWidth - 48);
-    CELL = Math.floor(available / GRID_SIZE);
+    // Odštejemo prostor za odmike in kontrolno ploščo (cca 250px-300px)
+    const availableWidth = window.innerWidth - 60;
+    const availableHeight = window.innerHeight - 280; 
+    
+    // Izberemo najmanjšo možno mero, da se labirint vedno prilega okru
+    let size = Math.min(500, availableWidth, availableHeight);
+    
+    // Preprečimo, da bi bil labirint premajhen za igranje
+    if (size < 200) size = 200;
+
+    CELL = Math.floor(size / GRID_SIZE);
     const logicalSize = GRID_SIZE * CELL + MARGIN * 2;
+    
     const dpr = window.devicePixelRatio || 1;
     canvas.width = logicalSize * dpr;
     canvas.height = logicalSize * dpr;
     canvas.style.width = logicalSize + "px";
     canvas.style.height = logicalSize + "px";
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    // Takoj osvežimo pozicije elementov
+    if (playerCell) {
+        place(astronavt, playerCell.x, playerCell.y);
+    } else {
+        place(astronavt, 0, 0);
+    }
+    place(raketa, GRID_SIZE - 1, GRID_SIZE - 1);
+    
+    // Ponovno narišemo labirint, ker se je Canvas očistil ob spremembi velikosti
+    if (maze.length > 0) drawMaze();
+}
+
+function place(el, x, y) {
+    const cx = MARGIN + x * CELL + CELL / 2;
+    const cy = MARGIN + y * CELL + CELL / 2;
+    el.style.left = (cx - el.offsetWidth / 2) + "px";
+    el.style.top = (cy - el.offsetHeight / 2) + "px";
 }
 
 class Cell {
@@ -115,7 +105,7 @@ function generateMaze() {
 
 function drawMaze() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.8)"; 
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.9)"; 
     ctx.lineWidth = 2;
     maze.forEach(c => {
         const x = MARGIN + c.x * CELL, y = MARGIN + c.y * CELL;
@@ -128,31 +118,20 @@ function drawMaze() {
     });
 }
 
-function place(el, x, y) {
-    const cx = MARGIN + x * CELL + CELL/2;
-    const cy = MARGIN + y * CELL + CELL/2;
-    el.style.left = (cx - el.offsetWidth/2) + "px";
-    el.style.top = (cy - el.offsetHeight/2) + "px";
-}
-
 function resetAndBuild() {
-    applyResponsiveSizing();
     generateMaze();
+    applyResponsiveSizing();
     drawMaze();
-    place(astronavt, 0, 0);
-    place(raketa, GRID_SIZE-1, GRID_SIZE-1);
-    playMode = false; playBtn.innerText = "Igraj";
-    timerEl.textContent = formatTime(difficultyToMs());
+    playMode = false;
+    playBtn.innerText = "Igraj";
 }
 
 playBtn.onclick = () => {
-    if (playMode) { resetAndBuild(); stopTimer(); }
+    if (playMode) { resetAndBuild(); } 
     else { 
         playMode = true; 
         playBtn.innerText = "Reset"; 
-        startTimer(); 
         playerCell = maze[0]; 
-        astronavt.classList.add("play-mode");
     }
 };
 
@@ -166,15 +145,14 @@ window.onkeydown = (e) => {
     else if (key === "arrowright" || key === "d") { dx = 1; wall = "right"; }
     
     if (wall && !playerCell.walls[wall]) {
-        const nextX = playerCell.x + dx;
-        const nextY = playerCell.y + dy;
-        playerCell = maze[nextX + nextY * GRID_SIZE];
+        playerCell = maze[(playerCell.x + dx) + (playerCell.y + dy) * GRID_SIZE];
         place(astronavt, playerCell.x, playerCell.y);
         if (playerCell.x === GRID_SIZE-1 && playerCell.y === GRID_SIZE-1) {
-            setTimeout(() => { alert("Čestitamo! Astronavt je na varnem!"); resetAndBuild(); stopTimer(); }, 50);
+            setTimeout(() => { alert("Zmaga!"); resetAndBuild(); }, 100);
         }
     }
 };
 
+// Ključno za zoom in resize
+window.addEventListener('resize', applyResponsiveSizing);
 window.onload = resetAndBuild;
-window.onresize = applyResponsiveSizing;
