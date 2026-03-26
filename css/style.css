@@ -7,11 +7,14 @@
 body {
   position: relative;
   min-height: 100vh;
-  overflow: hidden;
-  background: #050505 url("../slike/vesolje-bg.jpg") no-repeat center center;
+  overflow-y: auto; 
+  background: #050505 url("../slike/vesolje-bg.jpg") no-repeat center center fixed;
   background-size: cover;
   font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   padding: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 body::before {
@@ -24,16 +27,14 @@ body::before {
 }
 
 #uiWrap {
-  position: absolute;
+  position: relative;
   z-index: 5;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 20px;
   width: min(92vw, 520px);
+  margin: auto;
 }
 
 #container {
@@ -208,4 +209,10 @@ body::before {
   .bottomRow { grid-template-columns: 1fr; }
   .topRow { grid-template-columns: 1fr; }
   #uiWrap { top: 20px; transform: translate(-50%, 0); }
+}
+@media (max-height: 700px) {
+  #uiWrap {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
 }
