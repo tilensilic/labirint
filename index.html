@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Labirint</title>
+  <title>Labirint v Vesolju</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -38,9 +38,26 @@
   <div id="instructionsModal" class="modal">
     <div class="modal-content">
       <span class="close">&times;</span>
-      <h2>Navodila</h2>
-      <p>Premikaj se s tipkami <b>WASD</b> ali <b>puščicami</b>.</p>
-      <p>Pripelji astronavta do rakete, preden zmanjka časa!</p>
+      <h2><i class="fa-solid fa-rocket-launch"></i> Navodila za igro</h2>
+      <div class="instructions-body">
+        <div class="instruction-item">
+          <i class="fa-solid fa-gamepad"></i>
+          <p><strong>Premikanje:</strong> Uporabljaj tipke <b>W, A, S, D</b> ali <b>puščice</b> na tipkovnici za krmiljenje astronavta skozi labirint.</p>
+        </div>
+        <div class="instruction-item">
+          <i class="fa-solid fa-gauge-high"></i>
+          <p><strong>Težavnost:</strong> Pred začetkom izberi težavnost. Višja stopnja pomeni manj časa za reševanje!</p>
+        </div>
+        <div class="instruction-item">
+          <i class="fa-solid fa-flag-checkered"></i>
+          <p><strong>Cilj:</strong> Tvoja naloga je varno pripeljati astronavta do rakete na drugi strani, preden zmanjka kisika (časa).</p>
+        </div>
+        <div class="instruction-item">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <p><strong>Pomoč:</strong> Če se zatakneš, uporabi gumb <b>Rešitev</b>, ki ti bo pokazal pot, vendar se igra takrat zaključi.</p>
+        </div>
+      </div>
+      <button class="modal-close-btn" id="closeModalBtn">Razumem, gremo!</button>
     </div>
   </div>
 
