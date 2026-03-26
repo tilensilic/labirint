@@ -156,3 +156,18 @@ window.onkeydown = (e) => {
 // Ključno za zoom in resize
 window.addEventListener('resize', applyResponsiveSizing);
 window.onload = resetAndBuild;
+
+// Dodaj na konec svoje originalne JS datoteke
+const modal = document.getElementById("instructionsModal");
+const instrBtn = document.getElementById("instructionsBtn");
+const span = document.getElementsByClassName("close")[0];
+
+if (instrBtn) {
+  instrBtn.onclick = () => modal.style.display = "block";
+}
+if (span) {
+  span.onclick = () => modal.style.display = "none";
+}
+window.onclick = (event) => {
+  if (event.target == modal) modal.style.display = "none";
+}
