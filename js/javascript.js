@@ -16,9 +16,11 @@ const timerEl = document.getElementById("timer");
 const modal = document.getElementById("instructionsModal");
 const instrBtn = document.getElementById("instructionsBtn");
 const closeBtn = document.querySelector(".close");
+const closeBtnBottom = document.getElementById("closeModalBtn");
 
 instrBtn.onclick = () => modal.style.display = "block";
 closeBtn.onclick = () => modal.style.display = "none";
+closeBtnBottom.onclick = () => modal.style.display = "none";
 window.onclick = (e) => { if(e.target == modal) modal.style.display = "none"; }
 
 let timeLeftMs = 180000;
@@ -30,7 +32,6 @@ let animating = false;
 let stepIndex = 0;
 let playMode = false;
 let playerCell = null;
-let playerTrail = [];
 
 function difficultyToMs() {
     const d = Number(difficultySelect.value);
@@ -59,7 +60,7 @@ function startTimer() {
 
 function timeUp() {
     playMode = false;
-    alert("Čas je potekel!");
+    alert("Kritično! Zmanjkalo je kisika. Poizkusi ponovno.");
     resetAndBuild();
 }
 
@@ -114,7 +115,8 @@ function generateMaze() {
 
 function drawMaze() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.strokeStyle = "white"; ctx.lineWidth = 2;
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.8)"; 
+    ctx.lineWidth = 2;
     maze.forEach(c => {
         const x = MARGIN + c.x * CELL, y = MARGIN + c.y * CELL;
         ctx.beginPath();
@@ -140,29 +142,39 @@ function resetAndBuild() {
     place(astronavt, 0, 0);
     place(raketa, GRID_SIZE-1, GRID_SIZE-1);
     playMode = false; playBtn.innerText = "Igraj";
+    timerEl.textContent = formatTime(difficultyToMs());
 }
 
 playBtn.onclick = () => {
     if (playMode) { resetAndBuild(); stopTimer(); }
-    else { playMode = true; playBtn.innerText = "Ponastavi"; startTimer(); playerCell = maze[0]; }
+    else { 
+        playMode = true; 
+        playBtn.innerText = "Reset"; 
+        startTimer(); 
+        playerCell = maze[0]; 
+        astronavt.classList.add("play-mode");
+    }
 };
 
 window.onkeydown = (e) => {
     if (!playMode) return;
-    const key = e.key;
+    const key = e.key.toLowerCase();
     let dx = 0, dy = 0, wall = "";
-    if (key === "ArrowUp" || key === "w") { dy = -1; wall = "top"; }
-    else if (key === "ArrowDown" || key === "s") { dy = 1; wall = "bottom"; }
-    else if (key === "ArrowLeft" || key === "a") { dx = -1; wall = "left"; }
-    else if (key === "ArrowRight" || key === "d") { dx = 1; wall = "right"; }
+    if (key === "arrowup" || key === "w") { dy = -1; wall = "top"; }
+    else if (key === "arrowdown" || key === "s") { dy = 1; wall = "bottom"; }
+    else if (key === "arrowleft" || key === "a") { dx = -1; wall = "left"; }
+    else if (key === "arrowright" || key === "d") { dx = 1; wall = "right"; }
     
     if (wall && !playerCell.walls[wall]) {
-        playerCell = maze[(playerCell.x + dx) + (playerCell.y + dy) * GRID_SIZE];
+        const nextX = playerCell.x + dx;
+        const nextY = playerCell.y + dy;
+        playerCell = maze[nextX + nextY * GRID_SIZE];
         place(astronavt, playerCell.x, playerCell.y);
         if (playerCell.x === GRID_SIZE-1 && playerCell.y === GRID_SIZE-1) {
-            alert("Zmaga!"); stopTimer(); resetAndBuild();
+            setTimeout(() => { alert("Čestitamo! Astronavt je na varnem!"); resetAndBuild(); stopTimer(); }, 50);
         }
     }
 };
 
 window.onload = resetAndBuild;
+window.onresize = applyResponsiveSizing;
