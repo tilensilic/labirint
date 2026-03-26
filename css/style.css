@@ -4,18 +4,16 @@
   padding: 0;
 }
 
-/*OZADJE */
 body {
   position: relative;
   min-height: 100vh;
   overflow: hidden;
-  background: url("../slike/vesolje-bg.jpg") no-repeat center center;
+  background: #050505 url("../slike/vesolje-bg.jpg") no-repeat center center;
   background-size: cover;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-family: system-ui, -apple-system, sans-serif;
   padding: 24px;
 }
 
-/* Temen overlay čez ozadje*/
 body::before {
   content: "";
   position: fixed;
@@ -42,87 +40,55 @@ body::before {
   position: relative;
   width: 100%;
   aspect-ratio: 1 / 1;
-  background: transparent;
 }
 
 #canvas {
-  position: relative;
   display: block;
   width: 100%;
   height: 100%;
 }
 
-#astronavt,
-#raketa {
+#astronavt, #raketa {
   position: absolute;
   pointer-events: none;
-  user-select: none;
-  line-height: 1;
-  filter: drop-shadow(0 2px 2px rgba(0,0,0,0.6));
-}
-
-#astronavt {
-  z-index: 6;
-  display: inline-block;
-  font-size: 30px;
-  color: #ffffff;
-  text-shadow:
-    0 0 10px rgba(0,0,0,0.75),
-    0 0 14px rgba(0,180,255,0.45);
-}
-
-#astronavt.play-mode {
-  font-size: 22px;
-  opacity: 0.95;
-}
-
-#raketa {
   z-index: 7;
   font-size: 30px;
-  color: #ffffff;
-  text-shadow:
-    0 0 10px rgba(0,0,0,0.75),
-    0 0 14px rgba(255,255,255,0.35);
+  color: #fff;
+  filter: drop-shadow(0 0 8px rgba(0,180,255,0.6));
 }
+
+#astronavt.play-mode { font-size: 22px; }
 
 #controls {
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 14px;
-}
-
-.topRow,
-.bottomRow {
-  width: 100%;
-  display: grid;
-  gap: 14px;
+  gap: 12px;
 }
 
 .topRow {
+  display: grid;
   grid-template-columns: 1fr 150px;
+  gap: 12px;
 }
 
+/* PORAVNAVA GUMBOV */
 .bottomRow {
-  grid-template-columns: 1fr 1fr;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
 }
 
-.controlBox,
-#controls button {
+.controlBox, #controls button {
   height: 52px;
-  border-radius: 18px;
-  border: 1px solid rgba(255,255,255,0.16);
-  box-shadow:
-    0 8px 24px rgba(0,0,0,0.25),
-    inset 0 1px 0 rgba(255,255,255,0.05);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: white;
 }
 
-.controlBox {
-  background: rgba(10, 18, 35, 0.52);
-}
+.controlBox { background: rgba(10, 18, 35, 0.6); }
 
 .selectBox {
   display: flex;
@@ -133,87 +99,67 @@ body::before {
 
 #difficulty {
   width: 100%;
-  height: 100%;
-  border: none;
-  outline: none;
   background: transparent;
+  border: none;
   color: white;
-  font-size: 15px;
   font-weight: 700;
-  letter-spacing: 0.2px;
   appearance: none;
   cursor: pointer;
-}
-
-#difficulty option {
-  background: #111;
-  color: white;
-}
-
-.selectBox::after {
-  content: "\f078";
-  font-family: "Font Awesome 6 Free";
-  font-weight: 900;
-  color: rgba(255,255,255,0.9);
-  position: absolute;
-  right: 16px;
-  pointer-events: none;
-  font-size: 13px;
 }
 
 .timerBox {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-size: 18px;
   font-weight: 800;
   letter-spacing: 1px;
-  text-shadow: 0 0 10px rgba(255,255,255,0.08);
 }
 
 #controls button {
-  width: 100%;
-  padding: 14px 0;
-  background: rgba(170, 0, 0, 0.90);
-  color: #fff;
-  font-size: 15px;
+  background: rgba(170, 0, 0, 0.85);
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: 1px;
   text-transform: uppercase;
   cursor: pointer;
-  transition: transform .12s ease, filter .12s ease, background .12s ease;
+  transition: all 0.2s;
 }
 
 #controls button:hover {
-  transform: translateY(-1px);
-  filter: brightness(1.07);
-  background: rgba(255, 0, 0, 0.95);
+  background: rgba(210, 0, 0, 1);
+  transform: translateY(-2px);
 }
 
-#controls button:active {
-  transform: translateY(0px) scale(0.99);
+/* MODALNI STILI */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
 }
 
-@media (max-width: 700px) {
-  .topRow,
-  .bottomRow {
-    grid-template-columns: 1fr;
-  }
+.modal-content {
+  background: rgba(15, 25, 45, 0.95);
+  margin: 10% auto;
+  padding: 30px;
+  border-radius: 24px;
+  width: 90%;
+  max-width: 400px;
+  color: white;
+  border: 1px solid rgba(255,255,255,0.1);
 }
 
-@media (max-width: 560px) {
-  #uiWrap {
-    top: 24px;
-    transform: translateX(-50%) scale(0.92);
-    transform-origin: top center;
-  }
-}
+.modal-content h2 { color: #ff3333; margin-bottom: 10px; }
 
-@media (max-width: 480px) {
-  #uiWrap {
-    top: 16px;
-    transform: translateX(-50%) scale(0.86);
-    transform-origin: top center;
-  }
+.modal-content ul { list-style: none; }
+
+.modal-content li { margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+
+.close { float: right; font-size: 28px; cursor: pointer; opacity: 0.6; }
+.close:hover { opacity: 1; }
+
+@media (max-width: 600px) {
+  .bottomRow { grid-template-columns: 1fr; }
+  .topRow { grid-template-columns: 1fr; }
 }
