@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Labirint</title>
+  <title>Labirint v Vesolju</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -24,14 +24,28 @@
             <option value="3">Težavnost 3 (1:00)</option>
           </select>
         </div>
-
         <div class="controlBox timerBox" id="timer">03:00</div>
       </div>
 
       <div class="bottomRow">
+        <button id="instructionsBtn">Navodila</button>
         <button id="playBtn">Igraj</button>
-        <button id="showSolution">Prikaži rešitev</button>
+        <button id="showSolution">Rešitev</button>
       </div>
+    </div>
+  </div>
+
+  <div id="instructionsModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Navodila za igro</h2>
+      <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;">
+      <ul>
+        <li><i class="fa-solid fa-bullseye"></i> <strong>Cilj:</strong> Pripelji astronavta do rakete.</li>
+        <li><i class="fa-solid fa-keyboard"></i> <strong>Kontrole:</strong> Uporabi tipke <b>W, A, S, D</b> ali <b>puščice</b>.</li>
+        <li><i class="fa-solid fa-clock"></i> <strong>Čas:</strong> Reši labirint, preden se izteče čas.</li>
+        <li><i class="fa-solid fa-lightbulb"></i> <strong>Pomoč:</strong> Gumb "Rešitev" ti pokaže pot, a konča igro.</li>
+      </ul>
     </div>
   </div>
 
