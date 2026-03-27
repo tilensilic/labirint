@@ -114,34 +114,52 @@ function generateMaze() {
 }
 
 function drawMaze() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.8)"; 
+    ctx.clearRect(0, 0, canvas.width, canvas.height);  // Počisti platno
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.8)";  // Barva sten
     ctx.lineWidth = 2;
+
+    // Nariši vsako celico labirinta
     maze.forEach(c => {
-        const x = MARGIN + c.x * CELL, y = MARGIN + c.y * CELL;
+        const x = MARGIN + c.x * CELL;
+        const y = MARGIN + c.y * CELL;
         ctx.beginPath();
-        if (c.walls.top) { ctx.moveTo(x,y); ctx.lineTo(x+CELL,y); }
-        if (c.walls.right) { ctx.moveTo(x+CELL,y); ctx.lineTo(x+CELL,y+CELL); }
-        if (c.walls.bottom) { ctx.moveTo(x,y+CELL); ctx.lineTo(x+CELL,y+CELL); }
-        if (c.walls.left) { ctx.moveTo(x,y); ctx.lineTo(x,y+CELL); }
+
+        // Nariši stene celic
+        if (c.walls.top) { ctx.moveTo(x, y); ctx.lineTo(x + CELL, y); }
+        if (c.walls.right) { ctx.moveTo(x + CELL, y); ctx.lineTo(x + CELL, y + CELL); }
+        if (c.walls.bottom) { ctx.moveTo(x, y + CELL); ctx.lineTo(x + CELL, y + CELL); }
+        if (c.walls.left) { ctx.moveTo(x, y); ctx.lineTo(x, y + CELL); }
+
         ctx.stroke();
     });
 }
 
 function place(el, x, y) {
-    const cx = MARGIN + x * CELL + CELL/2;
-    const cy = MARGIN + y * CELL + CELL/2;
-    el.style.left = (cx - el.offsetWidth/2) + "px";
-    el.style.top = (cy - el.offsetHeight/2) + "px";
+    const cx = MARGIN + x * CELL + CELL / 2;
+    const cy = MARGIN + y * CELL + CELL / 2;
+    el.style.left = (cx - el.offsetWidth / 2) + "px";
+    el.style.top = (cy - el.offsetHeight / 2) + "px";
+    
+    // Preveri pozicijo
+    console.log(`Postavljanje na: ${cx}, ${cy}`);
 }
 
 function resetAndBuild() {
-    applyResponsiveSizing();
-    generateMaze();
-    drawMaze();
+    applyResponsiveSizing();  // Prilagodi velikost
+    generateMaze();            // Generiraj labirint
+    drawMaze();                // Nariši labirint na platnu
+
+    // Nastavi začetno pozicijo astronavta
     place(astronavt, 0, 0);
-    place(raketa, GRID_SIZE-1, GRID_SIZE-1);
-    playMode = false; playBtn.innerText = "Igraj";
+
+    // Nastavi začetno pozicijo rakete
+    place(raketa, GRID_SIZE - 1, GRID_SIZE - 1);
+
+    // Nastavi igro v "stop" stanje
+    playMode = false;
+    playBtn.innerText = "Igraj";
+    
+    // Nastavi začetni čas
     timerEl.textContent = formatTime(difficultyToMs());
 }
 
@@ -172,9 +190,4 @@ window.onkeydown = (e) => {
         place(astronavt, playerCell.x, playerCell.y);
         if (playerCell.x === GRID_SIZE-1 && playerCell.y === GRID_SIZE-1) {
             setTimeout(() => { alert("Čestitamo! Astronavt je na varnem!"); resetAndBuild(); stopTimer(); }, 50);
-        }
-    }
-};
-
-window.onload = resetAndBuild;
-window.onresize = applyResponsiveSizing;
+       
