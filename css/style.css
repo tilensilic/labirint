@@ -1,121 +1,133 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
 body {
-  position: relative;
   min-height: 100vh;
-  /* Ključna sprememba: auto namesto hidden prepreči izginjanje vsebine ob zoomu */
-  overflow: auto; 
-  background: url("../slike/vesolje-bg.jpg") no-repeat center center fixed;
-  overflow: hidden;
-  background: #050505 url("../slike/vesolje-bg.jpg") no-repeat center center;
+  /* Omogoči scrollanje namesto skrivanja vsebine */
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #050505 url("../slike/vesolje-bg.jpg") no-repeat center center fixed;
   background-size: cover;
-  font-family: system-ui, -apple-system, sans-serif;
-  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  padding: 24px;
+  font-family: 'Segoe UI', sans-serif;
+  padding: 20px;
+  /* Centriranje z flexboxom namesto absolute */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+    min-height: 100vh;
+    background: #050505 url("../slike/vesolje-bg.jpg") no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto; /* Omogoči scroll, če je zoom prevelik */
+    padding: 20px;
 }
 
-@@ -55,22 +54,26 @@ body::before {
+#uiWrap {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: min(92vw, 520px);
+  margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    max-width: 520px;
+    z-index: 5;
+}
+
+#container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 8px;
+}
+
+#canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+#astronavt, #raketa {
+  position: absolute;
+  pointer-events: none;
   z-index: 7;
   font-size: 30px;
   color: #fff;
-  text-shadow: 0 0 10px rgba(0,180,255,0.45);
   filter: drop-shadow(0 0 8px rgba(0,180,255,0.6));
-  transition: all 0.1s linear;
 }
-
-#astronavt.play-mode { font-size: 22px; }
 
 #controls {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 14px;
   gap: 12px;
+    position: absolute;
+    z-index: 10;
+    pointer-events: none;
+    color: white;
+    font-size: 24px;
+    filter: drop-shadow(0 0 8px rgba(0, 180, 255, 0.8));
 }
 
 .topRow {
   display: grid;
-  grid-template-columns: 1fr 150px;
-  gap: 14px;
   grid-template-columns: 1fr 140px;
   gap: 12px;
 }
 
-/* PORAVNAVA GUMBOV: 3 stolpci, enakomerno razporejeni */
 .bottomRow {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-@@ -79,15 +82,15 @@ body::before {
+  gap: 10px;
+}
+#controls { width: 100%; display: flex; flex-direction: column; gap: 12px; }
+.topRow { display: grid; grid-template-columns: 1fr 140px; gap: 12px; }
+.bottomRow { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
 
 .controlBox, #controls button {
   height: 52px;
-  border-radius: 18px;
-  border: 1px solid rgba(255,255,255,0.16);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  background: rgba(10, 18, 35, 0.52);
   border-radius: 14px;
   border: 1px solid rgba(255,255,255,0.15);
   backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(10, 18, 35, 0.6);
   color: white;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-}
-
-.controlBox { background: rgba(10, 18, 35, 0.6); }
-
-.selectBox {
-  display: flex;
-  align-items: center;
-@@ -97,51 +100,112 @@ body::before {
-
-#difficulty {
-  width: 100%;
-  height: 100%;
-  border: none;
-  background: transparent;
-  border: none;
-  color: white;
-  font-size: 15px;
-  font-weight: 700;
-  appearance: none;
-  cursor: pointer;
-  outline: none;
-}
-
-.selectBox::after {
-  content: "\f078";
-  font-family: "Font Awesome 6 Free";
-  font-weight: 900;
-  position: absolute;
-  right: 16px;
-  pointer-events: none;
-}
-
-.timerBox {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 800;
-  letter-spacing: 1px;
+    height: 52px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(10, 18, 35, 0.7);
+    backdrop-filter: blur(10px);
+    color: white;
 }
 
 #controls button {
-  background: rgba(170, 0, 0, 0.90);
   background: rgba(170, 0, 0, 0.85);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   cursor: pointer;
-  transition: transform 0.1s;
-  transition: all 0.2s ease;
 }
 
-#controls button:hover {
-  background: rgba(220, 0, 0, 1);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255,0,0,0.3);
-}
-
-/* MODALNI STILI ZA NAVODILA */
+/* Modal stili */
 .modal {
   display: none;
   position: fixed;
@@ -124,6 +136,8 @@ body {
   background: rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(8px);
 }
+.selectBox { padding: 0 10px; display: flex; align-items: center; }
+#difficulty { width: 100%; background: transparent; border: none; color: white; font-weight: bold; cursor: pointer; }
 
 .modal-content {
   background: rgba(15, 25, 45, 0.98);
@@ -133,70 +147,25 @@ body {
   width: 90%;
   max-width: 450px;
   color: white;
-  border: 1px solid rgba(255,255,255,0.1);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-}
-
-.modal-content h2 { 
-  color: #ff3333; 
-  margin-bottom: 20px; 
   text-align: center;
-  font-size: 24px;
-}
-
-.instructions-body {
-  margin-bottom: 25px;
-}
-
-.instruction-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 15px;
-  margin-bottom: 18px;
-}
-
-.instruction-item i {
-  color: #00b4ff;
-  font-size: 20px;
-  margin-top: 3px;
-  width: 25px;
-  text-align: center;
-}
-
-.instruction-item p {
-  font-size: 14px;
-  line-height: 1.5;
-  color: #e0e0e0;
 }
 
 .modal-close-btn {
   width: 100%;
   padding: 12px;
   background: #ff3333;
-  border: none;
   color: white;
+  border: none;
   border-radius: 12px;
-  font-weight: 800;
   cursor: pointer;
-  text-transform: uppercase;
-  transition: background 0.2s;
+  margin-top: 15px;
+#controls button {
+    background: rgba(170, 0, 0, 0.9);
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
 }
 
-#controls button:hover { transform: translateY(-2px); filter: brightness(1.1); }
-.modal-close-btn:hover { background: #ff0000; }
-
-/* Modal */
-.modal { display: none; position: fixed; z-index: 100; inset: 0; background: rgba(0,0,0,0.8); }
-.modal-content { background: #111; margin: 15% auto; padding: 20px; width: 80%; max-width: 400px; border-radius: 15px; color: white; text-align: center; }
-.close { float: right; cursor: pointer; font-size: 24px; }
-.close { float: right; font-size: 28px; cursor: pointer; opacity: 0.6; margin-top: -10px; }
-.close:hover { opacity: 1; }
-
-/* Ob majhnem zaslonu ali velikem zoomu preklopimo na stolpec */
-@media (max-width: 600px) {
-  #uiWrap { position: relative; top: 0; left: 0; transform: none; margin: 20px auto; }
-@media (max-width: 500px) {
-  .bottomRow { grid-template-columns: 1fr; }
-  .topRow { grid-template-columns: 1fr; }
-  #uiWrap { top: 20px; transform: translate(-50%, 0); }
-}
+.close { float: right; font-size: 28px; cursor: pointer; }
+.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 100; }
+.modal-content { background: #111; margin: 10vh auto; padding: 20px; border-radius: 20px; max-width: 400px; color: white; text-align: center; }
