@@ -45,15 +45,24 @@ function formatTime(ms) {
     return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
 }
 
-function stopTimer() { if (timerId) { clearInterval(timerId); timerId = null; } }
+function stopTimer() { 
+    if (timerId) { 
+        clearInterval(timerId); 
+        timerId = null;  // Prepreči večkratno klicanje
+    } 
+}
 
 function startTimer() {
-    stopTimer();
+    stopTimer();  // Najprej ustavi morebitni obstoječi timer
     timeLeftMs = difficultyToMs();
     timerEndAt = Date.now() + timeLeftMs;
     timerId = setInterval(() => {
         timeLeftMs = timerEndAt - Date.now();
-        if (timeLeftMs <= 0) { timeLeftMs = 0; stopTimer(); timeUp(); }
+        if (timeLeftMs <= 0) { 
+            timeLeftMs = 0; 
+            stopTimer(); 
+            timeUp(); 
+        }
         timerEl.textContent = formatTime(timeLeftMs);
     }, 100);
 }
@@ -189,9 +198,9 @@ window.onkeydown = (e) => {
         const nextX = playerCell.x + dx;
         const nextY = playerCell.y + dy;
         playerCell = maze[nextX + nextY * GRID_SIZE];
-
         place(astronavt, playerCell.x, playerCell.y);
 
+        // Če je astronavt na cilju (raketa)
         if (playerCell.x === GRID_SIZE - 1 && playerCell.y === GRID_SIZE - 1) {
             setTimeout(() => { 
                 alert("Čestitamo! Astronavt je na varnem!"); 
