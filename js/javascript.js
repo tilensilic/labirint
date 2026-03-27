@@ -195,4 +195,10 @@ window.onkeydown = (e) => {
         if (playerCell.x === GRID_SIZE - 1 && playerCell.y === GRID_SIZE - 1) {
             setTimeout(() => {
                 alert("Čestitamo! Astronavt je na varnem!");
-               
+                resetAndBuild();
+            }, 300);
+        }
+    }
+};
+
+resetAndBuild();  // Inicializiraj igro ob nalaganju strani
