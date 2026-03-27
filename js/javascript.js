@@ -176,18 +176,23 @@ playBtn.onclick = () => {
 
 window.onkeydown = (e) => {
     if (!playMode) return;
+
     const key = e.key.toLowerCase();
     let dx = 0, dy = 0, wall = "";
+
     if (key === "arrowup" || key === "w") { dy = -1; wall = "top"; }
     else if (key === "arrowdown" || key === "s") { dy = 1; wall = "bottom"; }
     else if (key === "arrowleft" || key === "a") { dx = -1; wall = "left"; }
     else if (key === "arrowright" || key === "d") { dx = 1; wall = "right"; }
-    
+
     if (wall && !playerCell.walls[wall]) {
         const nextX = playerCell.x + dx;
         const nextY = playerCell.y + dy;
         playerCell = maze[nextX + nextY * GRID_SIZE];
+
         place(astronavt, playerCell.x, playerCell.y);
-        if (playerCell.x === GRID_SIZE-1 && playerCell.y === GRID_SIZE-1) {
-            setTimeout(() => { alert("Čestitamo! Astronavt je na varnem!"); resetAndBuild(); stopTimer(); }, 50);
-       
+
+        if (playerCell.x === GRID_SIZE - 1 && playerCell.y === GRID_SIZE - 1) {
+            setTimeout(() => {
+                alert("Čestitamo! Astronavt je na varnem!");
+               
