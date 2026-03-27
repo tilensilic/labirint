@@ -5,35 +5,29 @@
 }
 
 body {
-  position: relative;
   min-height: 100vh;
-  overflow: hidden;
-  background: #050505 url("../slike/vesolje-bg.jpg") no-repeat center center;
+  /* Omogoči scrollanje namesto skrivanja vsebine */
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #050505 url("../slike/vesolje-bg.jpg") no-repeat center center fixed;
   background-size: cover;
-  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  padding: 24px;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(circle at 20% 30%, rgba(0,0,0,0.22), rgba(0,0,0,0.72));
-  pointer-events: none;
-  z-index: 0;
+  font-family: 'Segoe UI', sans-serif;
+  padding: 20px;
+  /* Centriranje z flexboxom namesto absolute */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #uiWrap {
-  position: absolute;
+  position: relative;
   z-index: 5;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 20px;
   width: min(92vw, 520px);
+  margin: auto;
 }
 
 #container {
@@ -55,10 +49,7 @@ body::before {
   font-size: 30px;
   color: #fff;
   filter: drop-shadow(0 0 8px rgba(0,180,255,0.6));
-  transition: all 0.1s linear;
 }
-
-#astronavt.play-mode { font-size: 22px; }
 
 #controls {
   width: 100%;
@@ -73,7 +64,6 @@ body::before {
   gap: 12px;
 }
 
-/* PORAVNAVA GUMBOV: 3 stolpci, enakomerno razporejeni */
 .bottomRow {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -85,54 +75,19 @@ body::before {
   border-radius: 14px;
   border: 1px solid rgba(255,255,255,0.15);
   backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(10, 18, 35, 0.6);
   color: white;
-}
-
-.controlBox { background: rgba(10, 18, 35, 0.6); }
-
-.selectBox {
-  display: flex;
-  align-items: center;
-  padding: 0 14px;
-  position: relative;
-}
-
-#difficulty {
-  width: 100%;
-  background: transparent;
-  border: none;
-  color: white;
-  font-weight: 700;
-  appearance: none;
-  cursor: pointer;
-  outline: none;
-}
-
-.timerBox {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 800;
-  letter-spacing: 1px;
 }
 
 #controls button {
   background: rgba(170, 0, 0, 0.85);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   cursor: pointer;
-  transition: all 0.2s ease;
 }
 
-#controls button:hover {
-  background: rgba(220, 0, 0, 1);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255,0,0,0.3);
-}
-
-/* MODALNI STILI ZA NAVODILA */
+/* Modal stili */
 .modal {
   display: none;
   position: fixed;
@@ -150,62 +105,18 @@ body::before {
   width: 90%;
   max-width: 450px;
   color: white;
-  border: 1px solid rgba(255,255,255,0.1);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-}
-
-.modal-content h2 { 
-  color: #ff3333; 
-  margin-bottom: 20px; 
   text-align: center;
-  font-size: 24px;
-}
-
-.instructions-body {
-  margin-bottom: 25px;
-}
-
-.instruction-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 15px;
-  margin-bottom: 18px;
-}
-
-.instruction-item i {
-  color: #00b4ff;
-  font-size: 20px;
-  margin-top: 3px;
-  width: 25px;
-  text-align: center;
-}
-
-.instruction-item p {
-  font-size: 14px;
-  line-height: 1.5;
-  color: #e0e0e0;
 }
 
 .modal-close-btn {
   width: 100%;
   padding: 12px;
   background: #ff3333;
-  border: none;
   color: white;
+  border: none;
   border-radius: 12px;
-  font-weight: 800;
   cursor: pointer;
-  text-transform: uppercase;
-  transition: background 0.2s;
+  margin-top: 15px;
 }
 
-.modal-close-btn:hover { background: #ff0000; }
-
-.close { float: right; font-size: 28px; cursor: pointer; opacity: 0.6; margin-top: -10px; }
-.close:hover { opacity: 1; }
-
-@media (max-width: 500px) {
-  .bottomRow { grid-template-columns: 1fr; }
-  .topRow { grid-template-columns: 1fr; }
-  #uiWrap { top: 20px; transform: translate(-50%, 0); }
-}
+.close { float: right; font-size: 28px; cursor: pointer; }
