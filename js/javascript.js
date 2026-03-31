@@ -177,7 +177,22 @@ function place(el, x, y) {
     el.style.top = cy + "px";
 }
 
-// ================= SOLUTION =================
+// ================= SOLUTION WITH ANIMATION =================
+function animateSolution(path) {
+    let idx = 0;
+
+    const interval = setInterval(() => {
+        if (idx < path.length) {
+            place(astronavt, path[idx].x, path[idx].y);
+            idx++;
+        } else {
+            clearInterval(interval);
+            playMode = false;
+            stopTimer();
+        }
+    }, 200);
+}
+
 function findSolution() {
     let visited = new Set();
     let path = [];
@@ -219,23 +234,7 @@ function findSolution() {
 
 showBtn.onclick = () => {
     const solution = findSolution();
-
-    ctx.strokeStyle = "red";
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-
-    solution.forEach((c, i) => {
-        const x = MARGIN + c.x * CELL + CELL/2;
-        const y = MARGIN + c.y * CELL + CELL/2;
-
-        if (i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-    });
-
-    ctx.stroke();
-
-    playMode = false;
-    stopTimer();
+    animateSolution(solution);
 };
 
 // ================= RESET =================
@@ -244,8 +243,8 @@ function resetAndBuild() {
     generateMaze();
     drawMaze();
 
-    place(astronavt, 0, 0);
-    place(raketa, GRID_SIZE - 1, GRID_SIZE - 1);
+    place(astronavt, 0, 0);  // Adjust initial position to the center of the starting cell
+    place(raketa, GRID_SIZE - 1, GRID_SIZE - 1);  // Center the rocket at the exit
 
     playMode = false;
     playBtn.innerText = "Igraj";
@@ -292,7 +291,6 @@ window.addEventListener("keydown", (e) => {
     }
 });
 
-// ================= FIX ZA ZOOM =================
 window.addEventListener("resize", () => {
     resetAndBuild();
 });
