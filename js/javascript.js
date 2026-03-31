@@ -20,7 +20,7 @@ const closeBtnBottom = document.getElementById("closeModalBtn");
 instrBtn.onclick = () => modal.style.display = "block";
 closeBtn.onclick = () => modal.style.display = "none";
 closeBtnBottom.onclick = () => modal.style.display = "none";
-window.onclick = (e) => { if(e.target == modal) modal.style.display = "none"; }
+window.onclick = (e) => { if (e.target == modal) modal.style.display = "none"; }
 
 // TIMER
 let timeLeftMs = 180000;
@@ -114,19 +114,19 @@ function generateMaze() {
 
     while (true) {
         let neighbors = [];
-        const {x, y} = current;
+        const { x, y } = current;
 
-        if (y > 0 && !maze[x + (y-1)*GRID_SIZE].visited)
-            neighbors.push(maze[x + (y-1)*GRID_SIZE]);
+        if (y > 0 && !maze[x + (y - 1) * GRID_SIZE].visited)
+            neighbors.push(maze[x + (y - 1) * GRID_SIZE]);
 
-        if (x < GRID_SIZE-1 && !maze[(x+1) + y*GRID_SIZE].visited)
-            neighbors.push(maze[(x+1) + y*GRID_SIZE]);
+        if (x < GRID_SIZE - 1 && !maze[(x + 1) + y * GRID_SIZE].visited)
+            neighbors.push(maze[(x + 1) + y * GRID_SIZE]);
 
-        if (y < GRID_SIZE-1 && !maze[x + (y+1)*GRID_SIZE].visited)
-            neighbors.push(maze[x + (y+1)*GRID_SIZE]);
+        if (y < GRID_SIZE - 1 && !maze[x + (y + 1) * GRID_SIZE].visited)
+            neighbors.push(maze[x + (y + 1) * GRID_SIZE]);
 
-        if (x > 0 && !maze[(x-1) + y*GRID_SIZE].visited)
-            neighbors.push(maze[(x-1) + y*GRID_SIZE]);
+        if (x > 0 && !maze[(x - 1) + y * GRID_SIZE].visited)
+            neighbors.push(maze[(x - 1) + y * GRID_SIZE]);
 
         if (neighbors.length > 0) {
             let next = neighbors[Math.floor(Math.random() * neighbors.length)];
@@ -181,15 +181,30 @@ function place(el, x, y) {
 function animateSolution(path) {
     let idx = 0;
 
+    // Risanje poti z animacijo
+    ctx.strokeStyle = "red";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+
     const interval = setInterval(() => {
         if (idx < path.length) {
-            place(astronavt, path[idx].x, path[idx].y);
+            const x = MARGIN + path[idx].x * CELL + CELL / 2;
+            const y = MARGIN + path[idx].y * CELL + CELL / 2;
+
+            if (idx === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+
+            place(astronavt, path[idx].x, path[idx].y); // Astronavt premika po poti
             idx++;
         } else {
             clearInterval(interval);
             playMode = false;
             stopTimer();
         }
+        ctx.stroke();
     }, 200);
 }
 
@@ -208,13 +223,13 @@ function findSolution() {
 
         if (cell.x === GRID_SIZE - 1 && cell.y === GRID_SIZE - 1) return true;
 
-        const {x, y} = cell;
+        const { x, y } = cell;
 
         const moves = [
-            ["top", x, y-1],
-            ["right", x+1, y],
-            ["bottom", x, y+1],
-            ["left", x-1, y]
+            ["top", x, y - 1],
+            ["right", x + 1, y],
+            ["bottom", x, y + 1],
+            ["left", x - 1, y]
         ];
 
         for (let [dir, nx, ny] of moves) {
@@ -243,8 +258,8 @@ function resetAndBuild() {
     generateMaze();
     drawMaze();
 
-    place(astronavt, 0, 0);  // Adjust initial position to the center of the starting cell
-    place(raketa, GRID_SIZE - 1, GRID_SIZE - 1);  // Center the rocket at the exit
+    place(astronavt, 0, 0); // Nastavitev astronavta na začetno pozicijo
+    place(raketa, GRID_SIZE - 1, GRID_SIZE - 1); // Nastavitev rakete na ciljno pozicijo
 
     playMode = false;
     playBtn.innerText = "Igraj";
